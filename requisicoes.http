@@ -1,0 +1,159 @@
+### Arquivo para o HTTP Client do IntelliJ / extensão REST Client do VS Code.
+### Suba a aplicação com ./mvnw quarkus:dev e execute cada requisição.
+
+@base = http://localhost:8080
+
+### ===================== GÊNEROS =====================
+
+### 200 - lista todos os gêneros
+GET {{base}}/generos
+
+### 200 - busca o gênero 1
+GET {{base}}/generos/1
+
+### 404 - gênero inexistente
+GET {{base}}/generos/999
+
+### 201 - cria um gênero
+POST {{base}}/generos
+Content-Type: application/json
+
+{"nome": "Aventura", "descricao": "Histórias de exploração e desafios"}
+
+### 400 - dados inválidos
+POST {{base}}/generos
+Content-Type: application/json
+
+{"nome": ""}
+
+### 409 - nome repetido (Fantasia já existe)
+POST {{base}}/generos
+Content-Type: application/json
+
+{"nome": "Fantasia"}
+
+### 200 - PUT substitui todos os campos
+PUT {{base}}/generos/5
+Content-Type: application/json
+
+{"nome": "Aventura e Exploração", "descricao": "Descrição atualizada"}
+
+### 200 - PATCH altera só a descrição
+PATCH {{base}}/generos/5
+Content-Type: application/json
+
+{"descricao": "Somente a descrição mudou"}
+
+### 204 - remove um gênero sem livros
+DELETE {{base}}/generos/5
+
+### 409 - remove gênero com livros associados
+DELETE {{base}}/generos/1
+
+### ===================== AUTORES =====================
+
+### 200 - lista todos os autores
+GET {{base}}/autores
+
+### 200 - busca o autor 1
+GET {{base}}/autores/1
+
+### 201 - cria um autor
+POST {{base}}/autores
+Content-Type: application/json
+
+{"nome": "Júlio Verne", "nacionalidade": "França", "dataNascimento": "1828-02-08"}
+
+### 200 - PATCH altera a nacionalidade
+PATCH {{base}}/autores/6
+Content-Type: application/json
+
+{"nacionalidade": "França (atualizado)"}
+
+### 204 - remove um autor sem livros
+DELETE {{base}}/autores/6
+
+### ===================== LIVROS =====================
+
+### 200 - lista todo o acervo
+GET {{base}}/livros
+
+### 200 - filtra por título
+GET {{base}}/livros?titulo=hobbit
+
+### 200 - filtra por gênero
+GET {{base}}/livros?generoId=2
+
+### 200 - filtra por autor
+GET {{base}}/livros?autorId=1
+
+### 200 - busca o livro 1
+GET {{base}}/livros/1
+
+### 201 - cria um livro
+POST {{base}}/livros
+Content-Type: application/json
+
+{
+  "titulo": "Viagem ao Centro da Terra",
+  "isbn": "9788535914863",
+  "anoPublicacao": 1864,
+  "quantidadeTotal": 2,
+  "generoId": 1,
+  "autoresIds": [6]
+}
+
+### 200 - PATCH altera a quantidade total
+PATCH {{base}}/livros/6
+Content-Type: application/json
+
+{"quantidadeTotal": 5}
+
+### 200 - PUT substitui todos os dados
+PUT {{base}}/livros/6
+Content-Type: application/json
+
+{
+  "titulo": "Viagem ao Centro da Terra",
+  "isbn": "9788535914863",
+  "anoPublicacao": 1864,
+  "quantidadeTotal": 3,
+  "generoId": 1,
+  "autoresIds": [6]
+}
+
+### 409 - ISBN repetido
+POST {{base}}/livros
+Content-Type: application/json
+
+{
+  "titulo": "Outro livro",
+  "isbn": "9788595084742",
+  "anoPublicacao": 2000,
+  "quantidadeTotal": 1,
+  "generoId": 1,
+  "autoresIds": [1]
+}
+
+### ===================== EMPRÉSTIMOS =====================
+
+### 201 - registra um empréstimo
+POST {{base}}/emprestimos
+Content-Type: application/json
+
+{"livroId": 2, "nomeLeitor": "Ana Souza", "dataDevolucaoPrevista": "2030-12-31"}
+
+### 200 - lista todos os empréstimos
+GET {{base}}/emprestimos
+
+### 200 - filtra empréstimos ativos
+GET {{base}}/emprestimos?status=ATIVO
+
+### 200 - filtra empréstimos de um livro
+GET {{base}}/emprestimos?livroId=2
+
+### 200 - registra a devolução do empréstimo 1
+POST {{base}}/emprestimos/1/devolucao
+
+### 409 - devolução repetida
+POST {{base}}/emprestimos/1/devolucao
